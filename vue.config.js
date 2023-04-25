@@ -1,5 +1,6 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
+  publicPath: "./",
   transpileDependencies: true,
   chainWebpack: (config) => {
     // Add file-loader rule for glb and gltf files

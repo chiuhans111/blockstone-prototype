@@ -79,6 +79,8 @@ export default {
 
         gltf.scene.traverse((child) => {
           if (child.isMesh) {
+
+            child.position.set(0, 0, 0)
             const material = new THREE.MeshStandardMaterial({
               map: child.material.map,
               normalMap: child.material.normalMap,
