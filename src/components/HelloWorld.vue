@@ -1,14 +1,15 @@
 <template>
   <div class="root">
     <div class="canvas-container" ref="canvasContainer"></div>
-    <p>
+    <p v-if="overlay">
       It is glad to see you as one of us. we are an explorer that focus on Digital Design. New possibilities are creating in collision and thrust, we are independent yet support each other like a plate.
     </p>
 
     <div class="grid">
-      <div class="col"></div>
       <div class="col">
-        <div class="btn"></div>
+      </div>
+      <div class="col">
+        <div class="btn" @click="overlay = !overlay"></div>
       </div>
       <div class="col"></div>
       <div class="col"></div>
@@ -32,7 +33,8 @@ export default {
       scene: null,
       renderer: null,
       camera: null,
-      controls: null
+      controls: null,
+      overlay: true,
     }
   },
   mounted() {
@@ -61,7 +63,7 @@ export default {
         0.1, // near clipping plane
         1000 // far clipping plane
       )
-      camera.position.z = 2
+      camera.position.z = 3
 
       // Create a directional light with soft shadows
       // const light = new THREE.DirectionalLight(0xffffff, 0)
@@ -160,7 +162,7 @@ export default {
       this.renderer.setSize(canvas_width, canvas_height)
       this.camera.aspect = canvas_width / canvas_height
       this.camera.updateProjectionMatrix()
-    }
+    },
   }
 }
 </script>
@@ -184,7 +186,8 @@ export default {
   width: 64px;
   height: 64px;
   background-color: blue;
-
+  pointer-events: all;
+  cursor: pointer;
 }
 
 p {
@@ -205,6 +208,12 @@ p {
 
   max-width: 950px;
 
+  pointer-events: none;
+
+  @media (max-width: 1200px) {
+    font-size: 24px;
+    padding-left: 40px;
+  }
 }
 
 .grid {
@@ -215,7 +224,7 @@ p {
   pointer-events: none;
 
   .col {
-    border-right: solid 1px rgba(0, 0, 0, 0.1);
+    border-right: solid 1px rgba(128, 128,128, 0.2);
     width: 25%;
   }
 }
