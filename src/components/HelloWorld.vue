@@ -46,8 +46,9 @@ export default {
       // Create a scene, renderer, and camera
       const scene = new THREE.Scene()
       this.scene = scene
-      const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true })
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
       renderer.setClearColor(0x000000, 0)
+      renderer.setPixelRatio(window.devicePixelRatio)
       renderer.outputEncoding = THREE.sRGBEncoding
       this.renderer = renderer
       const canvas_width = innerWidth
@@ -113,8 +114,8 @@ export default {
 
               // child.material.map.wrapS = THREE.MirroredRepeatWrapping;
               // child.material.map.wrapT = THREE.MirroredRepeatWrapping;
-              // child.material.map.magFilter = THREE.NearestFilter;
-              // child.material.map.minFilter = THREE.NearestFilter;
+              child.material.map.magFilter = THREE.LinearFilter
+              child.material.map.minFilter = THREE.NearestFilter
             }
           })
 
@@ -224,7 +225,7 @@ p {
   pointer-events: none;
 
   .col {
-    border-right: solid 1px rgba(128, 128,128, 0.2);
+    border-right: solid 1px rgba(128, 128, 128, 0.2);
     width: 25%;
   }
 }
