@@ -43,21 +43,25 @@ export default {
     addEventListener("resize", this.resize)
   }, methods: {
     setup() {
-      // Create a scene, renderer, and camera
+
+      // Scene
       const scene = new THREE.Scene()
       this.scene = scene
+
+      // Renderer
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
       renderer.setClearColor(0x000000, 0)
       renderer.setPixelRatio(window.devicePixelRatio)
       renderer.outputEncoding = THREE.sRGBEncoding
       this.renderer = renderer
+
+      // Canvas
       const canvas_width = innerWidth
       const canvas_height = innerHeight
-
       renderer.setSize(canvas_width, canvas_height)
       this.$refs.canvasContainer.appendChild(renderer.domElement)
 
-      // Create a perspective camera
+      // Camera
       const camera = new THREE.PerspectiveCamera(
         40, // field of view
         canvas_width / canvas_height, // aspect ratio
@@ -66,17 +70,6 @@ export default {
       )
       camera.position.z = 3
 
-      // Create a directional light with soft shadows
-      // const light = new THREE.DirectionalLight(0xffffff, 0)
-      // light.position.set(0, 0, 1)
-      // light.castShadow = true
-      // light.shadow.mapSize.width = 1024
-      // light.shadow.mapSize.height = 1024
-      // light.shadow.camera.near = 0.1
-      // light.shadow.camera.far = 100
-      // scene.add(light)
-
-
       // Create an ambient light with a specific color and intensity
       const ambientLight = new THREE.AmbientLight(0xffffff, 1) // color: white, intensity: 0.5
       scene.add(ambientLight)
@@ -84,14 +77,13 @@ export default {
       // Create a GLTFLoader instance
       const loader = new GLTFLoader()
 
-
       const controls = new OrbitControls(camera, renderer.domElement)
       this.controls = controls
 
 
       // Load the glb model
       loader.load(
-        require('@/assets/blockstone_A.glb').default, // or use the imported model variable if you used the import statement
+        require('@/assets/blockstone_A.glb').default,
         (gltf) => {
           // Add the loaded glTF scene to your Three.js scene
           scene.add(gltf.scene)
@@ -100,29 +92,17 @@ export default {
             if (child.isMesh) {
 
               child.position.set(0, 0, 0)
-              const material = new THREE.MeshStandardMaterial({
-                map: child.material.map,
-                normalMap: child.material.normalMap,
-                normalMapType: THREE.ObjectSpaceNormalMap,
-                roughness: 0.6, // Set roughness property to control the reflection roughness
-                metalness: 0,
-              })
-              child.material = material
 
-              // Set materials for child objects
               console.log(child.material)
 
-              // child.material.map.wrapS = THREE.MirroredRepeatWrapping;
-              // child.material.map.wrapT = THREE.MirroredRepeatWrapping;
+              // Texture Filter
               child.material.map.magFilter = THREE.LinearFilter
               child.material.map.minFilter = THREE.NearestFilter
             }
           })
 
 
-
           // Create OrbitControls for rotating the model with the mouse
-
           controls.target = gltf.scene.position
           controls.update()
 
