@@ -5,8 +5,13 @@
       It is glad to see you as one of us. we are an explorer that focus on Digital Design. New possibilities are creating in collision and thrust, we are independent yet support each other like a plate.
     </p>
 
+
     <div class="grid">
       <div class="col">
+        <button @click="this.load(require('@/assets/blockstone_A.glb').default)">A</button>
+        <button @click="this.load(require('@/assets/blockstone_B.glb').default)">B</button>
+        <button @click="this.load(require('@/assets/blockstone_C.glb').default)">C</button>
+        <button @click="this.load(require('@/assets/blockstone_D.glb').default)">D</button>
       </div>
       <div class="col">
         <div class="btn" @click="overlay = !overlay"></div>
@@ -35,6 +40,7 @@ export default {
       camera: null,
       controls: null,
       overlay: true,
+      gltfScene: null
     }
   },
   mounted() {
@@ -74,49 +80,14 @@ export default {
       const ambientLight = new THREE.AmbientLight(0xffffff, 1) // color: white, intensity: 0.5
       scene.add(ambientLight)
 
-      // Create a GLTFLoader instance
-      const loader = new GLTFLoader()
+
 
       const controls = new OrbitControls(camera, renderer.domElement)
       this.controls = controls
 
 
-      // Load the glb model
-      loader.load(
-        require('@/assets/blockstone_A.glb').default,
-        (gltf) => {
-          // Add the loaded glTF scene to your Three.js scene
-          scene.add(gltf.scene)
+      this.load(require('@/assets/blockstone_A.glb').default)
 
-          gltf.scene.traverse((child) => {
-            if (child.isMesh) {
-
-              child.position.set(0, 0, 0)
-
-              console.log(child.material)
-
-              // Texture Filter
-              child.material.map.magFilter = THREE.LinearFilter
-              child.material.map.minFilter = THREE.NearestFilter
-            }
-          })
-
-
-          // Create OrbitControls for rotating the model with the mouse
-          controls.target = gltf.scene.position
-          controls.update()
-
-          console.log("load done")
-        },
-        (progress) => {
-          // Progress callback, e.g., to show loading progress
-          console.log('Loading progress:', progress)
-        },
-        (error) => {
-          // Error callback, e.g., to handle loading errors
-          console.error('Error loading glb model:', error)
-        }
-      )
 
       // Set up shadow properties for the renderer
       renderer.shadowMap.enabled = true
@@ -144,6 +115,48 @@ export default {
       this.camera.aspect = canvas_width / canvas_height
       this.camera.updateProjectionMatrix()
     },
+
+    load(model) {
+      // Create a GLTFLoader instance
+      const loader = new GLTFLoader()
+
+      if (this.gltfScene !== null) this.scene.remove(this.gltfScene)
+      // Load the glb model
+      loader.load(model, (gltf) => {
+        // Add the loaded glTF scene to your Three.js scene
+        this.scene.add(gltf.scene)
+        this.gltfScene = gltf.scene
+
+        gltf.scene.traverse((child) => {
+          if (child.isMesh) {
+
+            child.position.set(0, 0, 0)
+
+            console.log(child.material)
+
+            // Texture Filter
+            child.material.map.magFilter = THREE.LinearFilter
+            child.material.map.minFilter = THREE.NearestFilter
+          }
+        })
+
+
+        // Create OrbitControls for rotating the model with the mouse
+        // controls.target = gltf.scene.position
+        // controls.update()
+
+        console.log("load done")
+      },
+        (progress) => {
+          // Progress callback, e.g., to show loading progress
+          console.log('Loading progress:', progress)
+        },
+        (error) => {
+          // Error callback, e.g., to handle loading errors
+          console.error('Error loading glb model:', error)
+        }
+      )
+    }
   }
 }
 </script>
@@ -167,9 +180,9 @@ export default {
   width: 64px;
   height: 64px;
   background-color: blue;
-  pointer-events: all;
   cursor: pointer;
 }
+
 
 p {
   display: block;
@@ -189,8 +202,6 @@ p {
 
   max-width: 950px;
 
-  pointer-events: none;
-
   @media (max-width: 1200px) {
     font-size: 24px;
     padding-left: 40px;
@@ -203,6 +214,10 @@ p {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
+
+  .btn, button{
+    pointer-events: all;
+  }
 
   .col {
     border-right: solid 1px rgba(128, 128, 128, 0.2);
