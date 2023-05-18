@@ -176,13 +176,19 @@ export default {
   }
 }
 
-.btn {
+.btn{
   width: 64px;
   height: 64px;
   background-color: blue;
+  color: white;
   cursor: pointer;
 }
 
+button {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
 
 p {
   display: block;
@@ -215,7 +221,8 @@ p {
   height: 100vh;
   pointer-events: none;
 
-  .btn, button{
+  .btn,
+  button {
     pointer-events: all;
   }
 
